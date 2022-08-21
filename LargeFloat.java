@@ -7,6 +7,65 @@ package rsn170330.lp1;
  */
 public class LargeFloat {
 
+	final int GENAUICHKEIT = 51;
+	int counter = 0;
+	
+	public String divFloat(String nr1, String nr2) {
+		String[] arrNr1 = split(nr1);
+		String[] arrNr2 = split(nr2);
+		Num[][] numbers = {
+				{new Num(arrNr1[0]), new Num(arrNr1[1])},
+				{new Num(arrNr2[0]), new Num(arrNr2[1])}
+				};
+		String vorKomma = null;
+		String hinterKomma = null;
+		if (Num.isSmallerThan(numbers[0][0], numbers[1][0])) {
+			vorKomma = "0";
+		} else {
+			vorKomma = Num.divide(numbers[0][0], numbers[1][0]).toString();
+		}
+		if (Num.isSmallerThan(numbers[0][1], numbers[1][1])) {
+			Num unterStrich = Num.subtract(new Num(nr2), new Num(nr1));
+			Num unterStrichMal10 = Num.product(unterStrich, new Num("10"));
+			if (counter < GENAUICHKEIT) {
+				hinterKomma = split(divFloat(unterStrichMal10.toString(), nr2))[0];
+				counter++;
+			} else {
+				hinterKomma = Num.divide(unterStrichMal10, new Num(split(nr2)[0])).toString();
+			}
+		} else {
+			hinterKomma = Num.divide(numbers[0][1], numbers[1][1]).toString();
+		}
+		String erg = vorKomma + "." + hinterKomma;
+		return erg;
+	}
+	
+	public String mulFloat(String nr1, String nr2) {
+		String erg = "0.0";
+		String zahl = nr2;
+		while (!(zahl.equals("0.0"))) {
+			zahl = subFloat(nr2, "1.0");
+			erg = addFloat(erg, nr2);
+		}
+		return erg;
+	}
+	
+	public String powFloat(String basiszahl, String exponent) {
+		String erg = basiszahl;
+		String zahl = exponent;
+		if (basiszahl.equals("0.0") || exponent.equals("0.0")) {
+			return "0.0";
+		}
+		if (exponent.equals("1.0")) {
+			return basiszahl;
+		}
+		while (!(zahl.equals("1.0"))) {
+			erg = mulFloat(basiszahl, erg);
+			zahl = subFloat(exponent, "1.0");
+		}
+		return erg;
+	}
+	
 	/**
 	 * Subtracts two float numbers.
 	 * @param nr1
